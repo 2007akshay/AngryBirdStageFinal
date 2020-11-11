@@ -7,11 +7,13 @@ var engine, world;
 var box1, pig1,pig3;
 var backgroundImg,platform;
 var bird, slingshot;
+var score = 0 ;
 
 var gameState = "onSling";
 
 function preload() {
-    backgroundImg = loadImage("sprites/bg.png");
+    //backgroundImg = loadImage("sprites/bg.png");
+    background2();
 }
 
 function setup(){
@@ -42,21 +44,33 @@ function setup(){
 
     //log6 = new Log(230,180,80, PI/2);
     slingshot = new SlingShot(bird.body,{x:200, y:50});
+    
 }
 
 function draw(){
-    background(backgroundImg);
+
+    if(backgroundImg)
+ 
+     background(backgroundImg);
+     textSize(30);
+     noStroke();
+     fill("white")
+     text("SCORE : "+ score ,width-300,50)
+
     Engine.update(engine);
     //strokeWeight(4);
     box1.display();
     box2.display();
     ground.display();
     pig1.display();
+    pig1.score();
+    console.log("hello");
     log1.display();
 
     box3.display();
     box4.display();
     pig3.display();
+    pig3.score();   
     log3.display();
 
     box5.display();
@@ -66,14 +80,17 @@ function draw(){
     bird.display();
     platform.display();
     //log6.display();
-    slingshot.display();    
+    slingshot.display(); 
+    
+    
 }
 
 function mouseDragged(){
-    if (gameState!=="launched"){
+    //if (gameState!=="launched"){
         Matter.Body.setPosition(bird.body, {x: mouseX , y: mouseY});
     }
-}
+//}
+
 
 
 function mouseReleased(){
@@ -83,6 +100,30 @@ function mouseReleased(){
 
 function keyPressed(){
     if(keyCode === 32){
-       // slingshot.attach(bird.body);
+        bird.trajectory=[];
+        Matter.Body.setPosition(bird.body,{x:200,y:50})
+        slingshot.attach(bird.body);
+       
     }
+}
+
+async function background2 (){
+var time1 = await fetch("http://worldtimeapi.org/api/timezone/Asia/Kolkata") 
+var dtJSON = await time1.json();
+console.log(dtJSON);
+var dt = dtJSON.datetime
+console.log(dt);
+var Hour = dt.slice(11,13)
+console.log(Hour);
+
+if(Hour>=6 && Hour<=19){
+bg="sprites/bg.png"
+
+}
+else{
+bg="sprites/bg2.jpg"
+
+}
+backgroundImg=loadImage(bg);
+console.log(backgroundImg);
 }
